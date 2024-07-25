@@ -22,8 +22,14 @@
 			</ExperimentalAcrylicBorder.Material>
 		</ExperimentalAcrylicBorder>
 		<StackPanel Margin="40" Spacing="10">
-			<TextBox LostFocus="URLUpdate" Name="URLBox" Watermark="URL"></TextBox>
-			<Button Click="DownloadButton">Download</Button>
+			<TextBlock>YouTube Downloader</TextBlock>
+			<TextBox Name="URLBox" Watermark="URL"></TextBox>
+			<Button Click="SubmitButton">Submit</Button>
+
+			<StackPanel IsVisible="false">
+				<Image Name="ThumbnailPreview" Width="320" Height="180" Stretch="UniformToFill" Source="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"/>
+				<Button Click="DownloadButton">Download</Button>
+			</StackPanel>
 		</StackPanel>
 	</Panel>
 	</dialogs:ReactiveDialogHost >

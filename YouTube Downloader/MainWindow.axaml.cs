@@ -1,9 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Metadata;
 using Avalonia.Platform.Storage;
 using AvaloniaDialogs.Views;
 using System;
 using System.Diagnostics;
+using System.Net;
 using Tmds.DBus.Protocol;
 using YoutubeExplode;
 using YoutubeExplode.Converter;
@@ -13,17 +15,33 @@ namespace YouTube_Downloader
     public partial class MainWindow : Window
     {
         YoutubeClient youtube = new YoutubeClient();
+        WebClient client = new WebClient();
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        public async void URLUpdate(object sender, RoutedEventArgs args)
+        public async void SubmitButton(object sender, RoutedEventArgs args)
         {
+            try
+            {
+                var video = await youtube.Videos.GetAsync(URLBox.Text);
+                
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
 
+                SingleActionDialog dialog = new()
+                {
+                    Message = "Video not found. Did you enter the URL incorrectly?",
+                    ButtonText = "OK"
+                };
+                await dialog.ShowAsync();
+            }
+            
         }
-
 
         public async void DownloadButton(object sender, RoutedEventArgs args)
         {
@@ -55,11 +73,16 @@ namespace YouTube_Downloader
 
                 SingleActionDialog dialog = new()
                 {
-                    Message = "Download failed. Did you enter the URL incorrectly?",
+                    Message = "Download failed. Are you connected to the internet?",
                     ButtonText = "OK"
                 };
                 await dialog.ShowAsync();
             }
+        }
+
+        public async void GetImageFromURL(string url)
+        {
+            
         }
     }
 }
