@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using System;
 using System.Diagnostics;
 using Tmds.DBus.Protocol;
@@ -19,9 +20,20 @@ namespace YouTube_Downloader
        
         public async void DownloadButton(object sender, RoutedEventArgs args)
         {
+            var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
+            {
+                Title = "Choose where to save the download",
+                //You can add either custom or from the built-in file types. See "Defining custom file types" on how to create a custom one.
+                SuggestedFileName = "download",
+                DefaultExtension = "mp4",
+                ShowOverwritePrompt = true
+            });
+
+
+
             try
             {
-                await youtube.Videos.DownloadAsync(URLBox.Text, "test.mp4");
+                await youtube.Videos.DownloadAsync(URLBox.Text, file.TryGetLocalPath());
             }
             catch (Exception ex)
             {
