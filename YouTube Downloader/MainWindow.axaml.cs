@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Metadata;
 using Avalonia.Platform.Storage;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 using System.Net;
 using Tmds.DBus.Protocol;
 using YoutubeExplode;
+using YoutubeExplode.Common;
 using YoutubeExplode.Converter;
 
 namespace YouTube_Downloader
@@ -15,7 +17,6 @@ namespace YouTube_Downloader
     public partial class MainWindow : Window
     {
         YoutubeClient youtube = new YoutubeClient();
-        WebClient client = new WebClient();
 
         public MainWindow()
         {
@@ -27,6 +28,8 @@ namespace YouTube_Downloader
             try
             {
                 var video = await youtube.Videos.GetAsync(URLBox.Text);
+                //ThumbnailPreview.Source = Url(video.Thumbnails.GetWithHighestResolution().Url)
+                DownloadArea.IsVisible = true;
                 
             }
             catch (Exception ex)
@@ -78,11 +81,6 @@ namespace YouTube_Downloader
                 };
                 await dialog.ShowAsync();
             }
-        }
-
-        public async void GetImageFromURL(string url)
-        {
-            
         }
     }
 }
