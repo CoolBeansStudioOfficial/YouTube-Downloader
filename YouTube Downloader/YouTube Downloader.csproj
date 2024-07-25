@@ -15,6 +15,7 @@
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.0" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.0" />
+    <PackageReference Include="AvaloniaDialogs" Version="3.5.6" />
     <PackageReference Include="YoutubeExplode" Version="6.3.16" />
     <PackageReference Include="YoutubeExplode.Converter" Version="6.3.16" />
   </ItemGroup>

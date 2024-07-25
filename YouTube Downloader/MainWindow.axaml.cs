@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using AvaloniaDialogs.Views;
 using System;
 using System.Diagnostics;
 using Tmds.DBus.Protocol;
@@ -17,7 +18,13 @@ namespace YouTube_Downloader
         {
             InitializeComponent();
         }
-       
+
+        public async void URLUpdate(object sender, RoutedEventArgs args)
+        {
+
+        }
+
+
         public async void DownloadButton(object sender, RoutedEventArgs args)
         {
             var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
@@ -34,10 +41,24 @@ namespace YouTube_Downloader
             try
             {
                 await youtube.Videos.DownloadAsync(URLBox.Text, file.TryGetLocalPath());
+
+                SingleActionDialog dialog = new()
+                {
+                    Message = "Successfully downloaded video to " + file.TryGetLocalPath(),
+                    ButtonText = "OK"
+                };
+                await dialog.ShowAsync();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+
+                SingleActionDialog dialog = new()
+                {
+                    Message = "Download failed. Did you enter the URL incorrectly?",
+                    ButtonText = "OK"
+                };
+                await dialog.ShowAsync();
             }
         }
     }

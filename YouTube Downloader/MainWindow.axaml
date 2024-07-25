@@ -2,13 +2,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:dialogs="using:AvaloniaDialogs.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="YouTube_Downloader.MainWindow"
         Title="YouTube Downloader"
 		TransparencyLevelHint="AcrylicBlur"
 		Background="Transparent"
 		ExtendClientAreaToDecorationsHint="True">
-
+	
+	<dialogs:ReactiveDialogHost CloseOnClickAway="True">
 	<Panel>
 		<ExperimentalAcrylicBorder IsHitTestVisible="False">
 			<ExperimentalAcrylicBorder.Material>
@@ -20,10 +22,11 @@
 			</ExperimentalAcrylicBorder.Material>
 		</ExperimentalAcrylicBorder>
 		<StackPanel Margin="40" Spacing="10">
-			<TextBox Name="URLBox" Watermark="URL"></TextBox>
+			<TextBox LostFocus="URLUpdate" Name="URLBox" Watermark="URL"></TextBox>
 			<Button Click="DownloadButton">Download</Button>
 		</StackPanel>
 	</Panel>
+	</dialogs:ReactiveDialogHost >
 
 	
 	
