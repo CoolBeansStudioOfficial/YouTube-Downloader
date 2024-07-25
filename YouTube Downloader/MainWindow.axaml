@@ -6,7 +6,7 @@
         x:Class="YouTube_Downloader.MainWindow"
         Title="YouTube_Downloader">
 	<StackPanel Margin="40" Spacing="10">
-		<TextBox>URL</TextBox>
+		<TextBox Name="URLBox" Watermark="URL"></TextBox>
 		<Button Click="DownloadButton">Download</Button>
 	</StackPanel>
 	
