@@ -5,7 +5,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="YouTube_Downloader.MainWindow"
         Title="YouTube_Downloader">
-	<Button Click="DownloadButton" HorizontalAlignment="Center">
-		Download
-	</Button>
+	<StackPanel Margin="40" Spacing="10">
+		<TextBox>URL</TextBox>
+		<Button Click="DownloadButton">Download</Button>
+	</StackPanel>
+	
 </Window>
