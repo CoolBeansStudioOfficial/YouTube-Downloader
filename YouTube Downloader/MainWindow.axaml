@@ -1,6 +1,5 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:vm="using:Avalonia.YouTube_Downloader.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -9,12 +8,23 @@
 		TransparencyLevelHint="AcrylicBlur"
 		Background="Transparent"
 		ExtendClientAreaToDecorationsHint="True">
+
+	<Panel>
+		<ExperimentalAcrylicBorder IsHitTestVisible="False">
+			<ExperimentalAcrylicBorder.Material>
+				<ExperimentalAcrylicMaterial
+					BackgroundSource="Digger"
+					TintColor="Black"
+					TintOpacity="1"
+					MaterialOpacity="0.65" />
+			</ExperimentalAcrylicBorder.Material>
+		</ExperimentalAcrylicBorder>
+		<StackPanel Margin="40" Spacing="10">
+			<TextBox Name="URLBox" Watermark="URL"></TextBox>
+			<Button Click="DownloadButton">Download</Button>
+		</StackPanel>
+	</Panel>
+
 	
-	
-	
-	<StackPanel Margin="40" Spacing="10">
-		<TextBox Name="URLBox" Watermark="URL"></TextBox>
-		<Button Click="DownloadButton">Download</Button>
-	</StackPanel>
 	
 </Window>
