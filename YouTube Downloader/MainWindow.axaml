@@ -3,9 +3,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:dialogs="using:AvaloniaDialogs.Views"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="650" d:DesignHeight="525"
         x:Class="YouTube_Downloader.MainWindow"
         Title="YouTube Downloader"
+		
+		Width="650" Height="525"
 		TransparencyLevelHint="AcrylicBlur"
 		Background="Transparent"
 		ExtendClientAreaToDecorationsHint="True">
@@ -21,18 +23,18 @@
 					MaterialOpacity="0.65" />
 			</ExperimentalAcrylicBorder.Material>
 		</ExperimentalAcrylicBorder>
-		<StackPanel Margin="40" Spacing="10" Width="">
-			<TextBlock>YouTube Downloader</TextBlock>
-			<StackPanel Orientation="Horizontal" >
-				<TextBox Name="URLBox" Watermark="URL" MaxLength="64"></TextBox>
-				<Button Click="SubmitButton">Submit</Button>
+		<StackPanel Margin="40" Spacing="10">
+			<TextBlock FontWeight="Bold">YouTube Downloader</TextBlock>
+			<StackPanel Orientation="Horizontal" Spacing="10">
+				<TextBox  Name="URLBox" Watermark="URL" MaxLength="64"></TextBox>
+				<Button Click="Submit" Name="SubmitButton">Submit</Button>
 			</StackPanel>
 			<StackPanel Name="DownloadArea" Spacing="10" IsVisible="false">
 				<TextBlock/>
 				
-				<Image Name="PreviewThumbnail" HorizontalAlignment="Left" Width="320" Height="180" Stretch="UniformToFill"/>
-				<TextBlock Name="PreviewTitle" HorizontalAlignment="Left" TextWrapping="Wrap" MaxWidth="320"/>
-				<Button Click="DownloadButton" Width="320" HorizontalContentAlignment="Center">Download</Button>
+				<Image Name="PreviewThumbnail" HorizontalAlignment="Left" Width="480" Height="270" Stretch="UniformToFill"/>
+				<TextBlock Name="PreviewTitle" HorizontalAlignment="Left" TextWrapping="Wrap" MaxWidth="480"/>
+				<Button Click="DownloadButton" Width="480" HorizontalContentAlignment="Center">Download</Button>
 			</StackPanel>
 		</StackPanel>
 	</Panel>

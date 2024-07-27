@@ -1,11 +1,13 @@
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Metadata;
 using Avalonia.Platform.Storage;
 using AvaloniaDialogs.Views;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using Tmds.DBus.Protocol;
@@ -17,14 +19,14 @@ namespace YouTube_Downloader
 {
     public partial class MainWindow : Window
     {
-        YoutubeClient youtube = new YoutubeClient();
+        readonly YoutubeClient youtube = new();
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        public async void SubmitButton(object sender, RoutedEventArgs args)
+        public async void Submit(object sender, RoutedEventArgs args)
         {
             try
             {
