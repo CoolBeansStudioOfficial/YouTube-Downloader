@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
 using Avalonia.Metadata;
 using Avalonia.Platform.Storage;
 using AvaloniaDialogs.Views;
@@ -28,7 +29,8 @@ namespace YouTube_Downloader
             try
             {
                 var video = await youtube.Videos.GetAsync(URLBox.Text);
-                //ThumbnailPreview.Source = Url(video.Thumbnails.GetWithHighestResolution().Url)
+                PreviewTitle.Text = video.Title;
+                PreviewThumbnail.Source = await ImageHelper.LoadFromWeb(new Uri(video.Thumbnails.GetWithHighestResolution().Url));
                 DownloadArea.IsVisible = true;
                 
             }

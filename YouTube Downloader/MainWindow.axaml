@@ -21,14 +21,18 @@
 					MaterialOpacity="0.65" />
 			</ExperimentalAcrylicBorder.Material>
 		</ExperimentalAcrylicBorder>
-		<StackPanel Margin="40" Spacing="10">
+		<StackPanel Margin="40" Spacing="10" Width="">
 			<TextBlock>YouTube Downloader</TextBlock>
-			<TextBox Name="URLBox" Watermark="URL"></TextBox>
-			<Button Click="SubmitButton">Submit</Button>
-
-			<StackPanel Name="DownloadArea" IsVisible="false">
-				<Image Name="ThumbnailPreview" Width="320" Height="180" Stretch="UniformToFill"/>
-				<Button Click="DownloadButton">Download</Button>
+			<StackPanel Orientation="Horizontal" >
+				<TextBox Name="URLBox" Watermark="URL" MaxLength="64"></TextBox>
+				<Button Click="SubmitButton">Submit</Button>
+			</StackPanel>
+			<StackPanel Name="DownloadArea" Spacing="10" IsVisible="false">
+				<TextBlock/>
+				
+				<Image Name="PreviewThumbnail" HorizontalAlignment="Left" Width="320" Height="180" Stretch="UniformToFill"/>
+				<TextBlock Name="PreviewTitle" HorizontalAlignment="Left" TextWrapping="Wrap" MaxWidth="320"/>
+				<Button Click="DownloadButton" Width="320" HorizontalContentAlignment="Center">Download</Button>
 			</StackPanel>
 		</StackPanel>
 	</Panel>
