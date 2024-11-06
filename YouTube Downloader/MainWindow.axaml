@@ -8,6 +8,7 @@
         Title="YouTube Downloader"
 		
 		Width="650" Height="525"
+		CanResize="False"
 		TransparencyLevelHint="AcrylicBlur"
 		Background="Transparent"
 		ExtendClientAreaToDecorationsHint="True">
@@ -29,12 +30,15 @@
 				<TextBox  Name="URLBox" Watermark="URL" MaxLength="64"></TextBox>
 				<Button Click="Submit" Name="SubmitButton">Submit</Button>
 			</StackPanel>
-			<StackPanel Name="DownloadArea" Spacing="10" IsVisible="false">
+			<StackPanel Name="DownloadArea" Spacing="10" IsVisible="true">
 				<TextBlock/>
 				
 				<Image Name="PreviewThumbnail" HorizontalAlignment="Left" Width="480" Height="270" Stretch="UniformToFill"/>
 				<TextBlock Name="PreviewTitle" HorizontalAlignment="Left" TextWrapping="Wrap" MaxWidth="480"/>
-				<Button Click="DownloadButton" Width="480" HorizontalContentAlignment="Center">Download</Button>
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<Button Click="DownloadVideo" Width="235" HorizontalContentAlignment="Center">Download</Button>
+					<ComboBox Name="QualitySelect" SelectionChanged="SelectResolution" SelectedIndex="0" MaxDropDownHeight="100" Width="235"></ComboBox>
+				</StackPanel>
 			</StackPanel>
 		</StackPanel>
 	</Panel>
