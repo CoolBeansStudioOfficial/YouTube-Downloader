@@ -51,11 +51,18 @@ namespace YouTube_Downloader
                 manifest = await youtube.Videos.Streams.GetManifestAsync(URLBox.Text);
                 foreach (var stream in manifest.GetVideoOnlyStreams())
                 {
-                    QualitySelect.Items.Add(stream.VideoResolution + " " + stream.Bitrate);
+                    //QualitySelect.Items.Add(stream.VideoResolution + " " + stream.VideoQuality + stream.Bitrate);
+                    QualitySelect.Items.Add(stream.VideoQuality + " " + stream.Bitrate);
                 } 
 
-                //select highest resolution by default
-                QualitySelect.SelectedIndex = 0;
+                //select highest quality by default
+                foreach (var item in QualitySelect.Items)
+                {
+                    if (item.ToString() == (manifest.GetVideoOnlyStreams().GetWithHighestVideoQuality().VideoQuality + " " + manifest.GetVideoOnlyStreams().GetWithHighestVideoQuality().Bitrate))
+                    {
+                        QualitySelect.SelectedItem = item;
+                    }
+                }
 
             }
             catch (Exception ex)
