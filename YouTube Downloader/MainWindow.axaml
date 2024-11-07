@@ -30,7 +30,7 @@
 				<TextBox  Name="URLBox" Watermark="URL" MaxLength="64"></TextBox>
 				<Button Click="Submit" Name="SubmitButton">Submit</Button>
 			</StackPanel>
-			<StackPanel Name="DownloadArea" Spacing="10" IsVisible="true">
+			<StackPanel Name="DownloadArea" Spacing="10" IsVisible="False">
 				<TextBlock/>
 				
 				<Image Name="PreviewThumbnail" HorizontalAlignment="Left" Width="480" Height="270" Stretch="UniformToFill"/>
