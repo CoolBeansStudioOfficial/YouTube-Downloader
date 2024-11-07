@@ -82,20 +82,45 @@ namespace YouTube_Downloader
         {
             try
             {
-                //prompt user to select save location
-                var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
+                FilePickerSaveOptions saveOptions;
+                if (AudioCheckbox.IsChecked.Value)
                 {
-                    Title = "Choose where to save the download",
-                    SuggestedFileName = video.Title,
-                    DefaultExtension = "mp4",
-                    ShowOverwritePrompt = true
-                });
+                    saveOptions = new FilePickerSaveOptions()
+                    {
+                        Title = "Choose where to save the download",
+                        SuggestedFileName = video.Title,
+                        DefaultExtension = "wav",
+                        ShowOverwritePrompt = true
+                    };
+                }
+                else
+                {
+                    saveOptions = new FilePickerSaveOptions()
+                    {
+                        Title = "Choose where to save the download",
+                        SuggestedFileName = video.Title,
+                        DefaultExtension = "mp4",
+                        ShowOverwritePrompt = true
+                    };
+                }
+                
+
+                //prompt user to select save location
+                var file = await StorageProvider.SaveFilePickerAsync(saveOptions);
 
                 //get best audio alongside user chosen resolution and download video
                 if (file is not null)
                 {
-                    var streamInfos = new IStreamInfo[] { manifest.GetAudioOnlyStreams().GetWithHighestBitrate(), manifest.GetVideoOnlyStreams().ElementAt(QualitySelect.SelectedIndex) };
-                    await youtube.Videos.DownloadAsync(streamInfos, new ConversionRequestBuilder(file.TryGetLocalPath()).Build());
+                    if (AudioCheckbox.IsChecked.Value)
+                    {
+                        var streamInfos = new IStreamInfo[] { manifest.GetAudioOnlyStreams().GetWithHighestBitrate() };
+                        await youtube.Videos.DownloadAsync(streamInfos, new ConversionRequestBuilder(file.TryGetLocalPath()).Build());
+                    }
+                    else
+                    {
+                        var streamInfos = new IStreamInfo[] { manifest.GetAudioOnlyStreams().GetWithHighestBitrate(), manifest.GetVideoOnlyStreams().ElementAt(QualitySelect.SelectedIndex) };
+                        await youtube.Videos.DownloadAsync(streamInfos, new ConversionRequestBuilder(file.TryGetLocalPath()).Build());
+                    }
                 }
                 else
                 {

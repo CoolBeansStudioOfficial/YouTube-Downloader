@@ -37,7 +37,7 @@
 				<TextBlock Name="PreviewTitle" HorizontalAlignment="Left" TextWrapping="Wrap" MaxWidth="480"/>
 				<StackPanel Orientation="Horizontal" Spacing="10">
 					<Button Click="DownloadVideo" Width="100" HorizontalContentAlignment="Center">Download</Button>
-					<ComboBox Name="QualitySelect" SelectedIndex="0" MaxDropDownHeight="100" Width="200"></ComboBox>
+					<ComboBox Name="QualitySelect" SelectedIndex="0" MaxDropDownHeight="100" Width="220"></ComboBox>
 					<CheckBox Name="AudioCheckbox" Click="CheckAudio">Audio only</CheckBox>
 				</StackPanel>
 			</StackPanel>
