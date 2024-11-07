@@ -25,6 +25,7 @@ namespace YouTube_Downloader
         private YoutubeExplode.Videos.Video video;
         private YoutubeExplode.Videos.Streams.StreamManifest manifest;
 
+
         public MainWindow()
         {
             InitializeComponent();
@@ -40,12 +41,19 @@ namespace YouTube_Downloader
                 PreviewThumbnail.Source = await ImageHelper.LoadFromWeb(new Uri(video.Thumbnails.GetWithHighestResolution().Url));
                 DownloadArea.IsVisible = true;
 
+                //clear old resolution list
+                while (QualitySelect.Items.Count > 0)
+                {
+                    QualitySelect.Items.Remove(QualitySelect.Items.ElementAt(0));
+                }
+
                 //get all available resolutions
                 manifest = await youtube.Videos.Streams.GetManifestAsync(URLBox.Text);
                 foreach (var stream in manifest.GetVideoOnlyStreams())
                 {
                     QualitySelect.Items.Add(stream.VideoResolution + " " + stream.Bitrate);
-                }
+                } 
+
                 //select highest resolution by default
                 QualitySelect.SelectedIndex = 0;
 
@@ -64,24 +72,36 @@ namespace YouTube_Downloader
             
         }
 
+        public void CheckAudio(object sender, RoutedEventArgs args)
+        {
+            //hide video quality selection if only audio is being downloaded
+            QualitySelect.IsVisible = !AudioCheckbox.IsChecked.Value;
+        }
+
         public async void DownloadVideo(object sender, RoutedEventArgs args)
         {
-            var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
-            {
-                Title = "Choose where to save the download",
-                //You can add either custom or from the built-in file types. See "Defining custom file types" on how to create a custom one.
-                SuggestedFileName = video.Title,
-                DefaultExtension = "mp4",
-                ShowOverwritePrompt = true
-            });
-
-
-
             try
             {
+                //prompt user to select save location
+                var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
+                {
+                    Title = "Choose where to save the download",
+                    SuggestedFileName = video.Title,
+                    DefaultExtension = "mp4",
+                    ShowOverwritePrompt = true
+                });
+
                 //get best audio alongside user chosen resolution and download video
-                var streamInfos = new IStreamInfo[] { manifest.GetAudioOnlyStreams().GetWithHighestBitrate(), manifest.GetVideoOnlyStreams().ElementAt(QualitySelect.SelectedIndex) };
-                await youtube.Videos.DownloadAsync(streamInfos, new ConversionRequestBuilder(file.TryGetLocalPath()).Build());
+                if (file is not null)
+                {
+                    var streamInfos = new IStreamInfo[] { manifest.GetAudioOnlyStreams().GetWithHighestBitrate(), manifest.GetVideoOnlyStreams().ElementAt(QualitySelect.SelectedIndex) };
+                    await youtube.Videos.DownloadAsync(streamInfos, new ConversionRequestBuilder(file.TryGetLocalPath()).Build());
+                }
+                else
+                {
+                    throw new Exception("Download cancelled");
+                }
+                
 
                 SingleActionDialog dialog = new()
                 {

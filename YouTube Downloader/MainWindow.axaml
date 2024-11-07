@@ -30,14 +30,15 @@
 				<TextBox  Name="URLBox" Watermark="URL" MaxLength="64"></TextBox>
 				<Button Click="Submit" Name="SubmitButton">Submit</Button>
 			</StackPanel>
-			<StackPanel Name="DownloadArea" Spacing="10" IsVisible="False">
+			<StackPanel Name="DownloadArea" Spacing="10" IsVisible="true">
 				<TextBlock/>
 				
 				<Image Name="PreviewThumbnail" HorizontalAlignment="Left" Width="480" Height="270" Stretch="UniformToFill"/>
 				<TextBlock Name="PreviewTitle" HorizontalAlignment="Left" TextWrapping="Wrap" MaxWidth="480"/>
 				<StackPanel Orientation="Horizontal" Spacing="10">
-					<Button Click="DownloadVideo" Width="235" HorizontalContentAlignment="Center">Download</Button>
-					<ComboBox Name="QualitySelect" SelectedIndex="0" MaxDropDownHeight="100" Width="235"></ComboBox>
+					<Button Click="DownloadVideo" Width="100" HorizontalContentAlignment="Center">Download</Button>
+					<ComboBox Name="QualitySelect" SelectedIndex="0" MaxDropDownHeight="100" Width="200"></ComboBox>
+					<CheckBox Name="AudioCheckbox" Click="CheckAudio">Audio only</CheckBox>
 				</StackPanel>
 			</StackPanel>
 		</StackPanel>
