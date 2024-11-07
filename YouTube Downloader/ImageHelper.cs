@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Platform.Storage;
 
 namespace YouTube_Downloader
 {
@@ -30,6 +31,12 @@ namespace YouTube_Downloader
                 Console.WriteLine($"An error occurred while downloading image '{url}' : {ex.Message}");
                 return null;
             }
+        }
+
+        public static async void SaveFromWeb(Uri url, string saveLocation)
+        {
+            var image = await LoadFromWeb(url);
+            image.Save(saveLocation);
         }
     }
 }
