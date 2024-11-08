@@ -7,7 +7,7 @@ A program designed to do one thing and do it well; download YouTube content! Mad
 
 I frequently find myself wanting to download a YouTube video, looking up "youtube downloader". I am then swiftly and painfully reminded that just about every downloader on the internet is flooded with ads, slow as rocks, and provides only low quality options (if you even get any options). Even worse; you have to visit individual sites specifically for audio/video only streams and thumbnails. 
 
-YouTube Downloader 2.0 aims to do away with this necessary evil once and for all by providing a simple, polished, and intuitive way to grab anything you need from YouTube at any quality you please.
+YouTube Downloader aims to do away with this necessary evil once and for all by providing a simple, polished, and intuitive way to grab anything you need from YouTube at any quality you please.
 
 ## How to Use
 
