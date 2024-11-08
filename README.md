@@ -1,7 +1,7 @@
 # YouTube Downloader
 
 A program designed to do one thing and do it well; download YouTube content! Made with Avalonia so it looks cool and modern.
-
+![Screenshot (4)](https://github.com/user-attachments/assets/f7a6ead0-aa4e-4022-bad1-7af17a309f5c)
 
 ## Purpose
 
