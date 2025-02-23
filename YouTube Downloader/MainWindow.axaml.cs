@@ -38,7 +38,7 @@ namespace YouTube_Downloader
                 //hide download area until loading is done
                 DownloadArea.IsVisible = false;
 
-                //get video metadata
+                //get video metadata and thumbnail
                 video = await youtube.Videos.GetAsync(URLBox.Text);
                 PreviewTitle.Text = video.Title;
                 PreviewThumbnail.Source = await ImageHelper.LoadFromWeb(new Uri(video.Thumbnails.GetWithHighestResolution().Url));
