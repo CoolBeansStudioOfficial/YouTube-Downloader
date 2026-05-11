@@ -3,12 +3,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:dialogs="using:AvaloniaDialogs.Views"
-        mc:Ignorable="d" d:DesignWidth="650" d:DesignHeight="525"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="YouTube_Downloader.MainWindow"
         Title="YouTube Downloader"
 		
-		Width="650" Height="525"
-		CanResize="False"
+		MinWidth="650" MinHeight="525"
+		CanResize="True"
 		TransparencyLevelHint="AcrylicBlur"
 		Background="Transparent"
 		ExtendClientAreaToDecorationsHint="True">
@@ -25,7 +25,6 @@
 			</ExperimentalAcrylicBorder.Material>
 		</ExperimentalAcrylicBorder>
 		<StackPanel Margin="40" Spacing="10">
-			<TextBlock FontWeight="Bold">YouTube Downloader</TextBlock>
 			<StackPanel Orientation="Horizontal" Spacing="10">
 				<TextBox  Name="URLBox" Watermark="URL" MaxLength="64"></TextBox>
 				<Button Click="Submit" Name="SubmitButton">Submit</Button>
@@ -35,7 +34,10 @@
 				<TextBlock Name="PreviewTitle" HorizontalAlignment="Left" TextWrapping="Wrap" MaxWidth="480"/>
 
 				<RelativePanel>
-					<Image Name="PreviewThumbnail" HorizontalAlignment="Left" Width="480" Height="270" Stretch="UniformToFill"/>
+					<Border CornerRadius="5" ClipToBounds="True">
+						<Image Name="PreviewThumbnail"  HorizontalAlignment="Left" Width="480" Height="270" Stretch="UniformToFill"/>
+					</Border>
+					
 					<Button Click="DownloadThumbnail" Margin="5" FontWeight="Black"
 							HorizontalContentAlignment="Center"
 							RelativePanel.AlignTopWithPanel="True"
@@ -47,8 +49,9 @@
 					<ComboBox Name="QualitySelect" SelectedIndex="0" MaxDropDownHeight="100" Width="230"></ComboBox>
 					<CheckBox Name="AudioCheckbox" Click="CheckAudio">Audio only</CheckBox>
 				</StackPanel>
-				
 			</StackPanel>
+
+			<ProgressBar Name="LoadingBar" ShowProgressText="True" IsVisible="False"></ProgressBar>
 		</StackPanel>
 	</Panel>
 	</dialogs:ReactiveDialogHost >
