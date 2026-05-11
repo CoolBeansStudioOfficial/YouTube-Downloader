@@ -17,7 +17,8 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.15" />
     <PackageReference Include="AvaloniaDialogs" Version="3.7.1" />
     <PackageReference Include="System.Drawing.Common" Version="10.0.7" />
-    <PackageReference Include="VideoLibrary" Version="3.3.1" />
+    <PackageReference Include="YoutubeExplode" Version="6.6.0" />
+    <PackageReference Include="YoutubeExplode.Converter" Version="6.6.0" />
   </ItemGroup>
 
   <ItemGroup>

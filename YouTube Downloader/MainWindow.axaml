@@ -26,7 +26,7 @@
 		</ExperimentalAcrylicBorder>
 		<StackPanel Margin="40" Spacing="10">
 			<StackPanel Orientation="Horizontal" Spacing="10">
-				<TextBox  Name="URLBox" Watermark="URL" MaxLength="64"></TextBox>
+				<TextBox  Name="URLBox" PlaceholderText="URL" MaxLength="43"></TextBox>
 				<Button Click="Submit" Name="SubmitButton">Submit</Button>
 			</StackPanel>
 			<StackPanel Name="DownloadArea" Spacing="10" IsVisible="False">

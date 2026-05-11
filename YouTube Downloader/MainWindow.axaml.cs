@@ -8,17 +8,20 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using VideoLibrary;
+using YoutubeExplode;
+using YoutubeExplode.Common;
+using YoutubeExplode.Converter;
+using YoutubeExplode.Videos;
+using YoutubeExplode.Videos.Streams;
 
 namespace YouTube_Downloader
 {
     public partial class MainWindow : Window
     {
-        YouTube youtube = YouTube.Default;
+        readonly YoutubeClient youtube = new();
 
-        IEnumerable<YouTubeVideo> videos;
-        string videoId;
-        List<int> availableResolutions = new();
+        Video video;
+        StreamManifest manifest;
 
         public MainWindow()
         {
@@ -29,54 +32,51 @@ namespace YouTube_Downloader
         {
             try
             {
-                string url = URLBox.Text;
-
-                //hide download area until loading is done
-                DownloadArea.IsVisible = false;
+                //update loading progress
+                LoadingBar.Value = 0;
 
                 //show loading bar
                 LoadingBar.IsVisible = true;
 
+                //hide download area until loading is done
+                DownloadArea.IsVisible = false;
+
                 //update loading progress
-                LoadingBar.Value = 33;
+                LoadingBar.Value = 25;
 
                 //get video metadata
-                videos = await youtube.GetAllVideosAsync(url);
-
-                //get video id
-                videoId = url.Substring(32, 11);
-                Debug.WriteLine(videoId);
-                Debug.WriteLine($"https://img.youtube.com/vi/{videoId}/maxresdefault");
-
-                //set title
-                PreviewTitle.Text = videos.First().Title;
+                video = await youtube.Videos.GetAsync(URLBox.Text.Substring(32, 11));
 
                 //update loading progress
-                LoadingBar.Value = 66;
+                LoadingBar.Value = 50;
+
+                manifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
+
+                //set title
+                PreviewTitle.Text = video.Title;
+
+                //update loading progress
+                LoadingBar.Value = 75;
 
                 //set thumbnail
-                PreviewThumbnail.Source = await ImageHelper.LoadFromWeb(new Uri($"https://img.youtube.com/vi/{videoId}/maxresdefault.jpg"));
-
+                PreviewThumbnail.Source = await ImageHelper.LoadFromWeb(new Uri(video.Thumbnails[0].Url));
 
                 //clear old resolution list
-                while (QualitySelect.Items.Count > 0)
-                {
-                    QualitySelect.Items.Remove(QualitySelect.Items.ElementAt(0));
-                }
-                availableResolutions.Clear();
+                QualitySelect.Items.Clear();
 
-                int highestRes = 0;
-                foreach (var video in videos)
+                foreach (var stream in manifest.GetVideoOnlyStreams())
                 {
-                    //QualitySelect.Items.Add(stream.VideoResolution + " " + stream.VideoQuality + stream.Bitrate);
-                    var item = QualitySelect.Items.Add(video.Resolution);
-                    availableResolutions.Add(video.Resolution);
+                    string label = $"{stream.VideoQuality} {stream.Bitrate}";
 
                     //select highest quality by default
-                    if (video.Resolution > highestRes)
+                    if (stream == manifest.GetVideoOnlyStreams().GetWithHighestVideoQuality())
                     {
+                        var item = QualitySelect.Items.Add($"{label} (Highest Quality)");
                         QualitySelect.SelectedIndex = item;
-                        highestRes = video.Resolution;
+                    }
+                    else
+                    {
+                        QualitySelect.Items.Add(label);
                     }
                 }
 
@@ -115,28 +115,17 @@ namespace YouTube_Downloader
             try
             {
                 //create different save options if audio only was selected
-                IStorageFile file;
-                if (AudioCheckbox.IsChecked.Value)
-                {
-                    file = await FilePrompt(FileType.Audio, videos.First().FullName);                
-                }
-                else
-                {
-                    file = await FilePrompt(FileType.Video, videos.First().FullName);
-                }
-
-                Debug.WriteLine("file path is: " + file.TryGetLocalPath());
+                IStorageFile? file;
+                if (AudioCheckbox.IsChecked.Value) file = await FilePrompt(FileType.Audio, video.Title);
+                else file = await FilePrompt(FileType.Video, video.Title);
 
                 //get user chosen resolution and download video
                 if (file is not null)
                 {
-                    YouTubeVideo selectedResolution = videos.Where(i => i.Resolution == availableResolutions[QualitySelect.SelectedIndex]).First();
-                    var bytes = await selectedResolution.GetBytesAsync();
-                    
-                    File.WriteAllBytes(file.TryGetLocalPath(), bytes);
+                    var streamInfos = new IStreamInfo[] { manifest.GetAudioOnlyStreams().GetWithHighestBitrate(), manifest.GetVideoOnlyStreams().ElementAt(QualitySelect.SelectedIndex) };
+                    await youtube.Videos.DownloadAsync(streamInfos, new ConversionRequestBuilder(file.TryGetLocalPath()).Build());
                 }
                 else throw new Exception("Download cancelled");
-
 
                 SingleActionDialog dialog = new()
                 {
@@ -160,27 +149,37 @@ namespace YouTube_Downloader
 
         public async void DownloadThumbnail(object sender, RoutedEventArgs args)
         {
-            try
+            //prompt user to select save location
+            var file = await FilePrompt(FileType.Image, video.Title);
+
+            if (file is not null)
             {
-                //prompt user to select save location
-                var file = await FilePrompt(FileType.Image, videos.First().FullName);
-
-                ImageHelper.SaveFromWeb(new Uri($"https://img.youtube.com/vi/{videoId}/maxresdefault.jpg"), file.TryGetLocalPath());
-
-                SingleActionDialog dialog = new()
+                try
                 {
-                    Message = "Successfully downloaded thumbnail to " + file.TryGetLocalPath(),
-                    ButtonText = "OK"
-                };
-                await dialog.ShowAsync();
+                    ImageHelper.SaveFromWeb(new Uri(video.Thumbnails.GetWithHighestResolution().Url), file.TryGetLocalPath());
+
+                    SingleActionDialog dialog = new()
+                    {
+                        Message = "Successfully downloaded thumbnail to " + file.TryGetLocalPath(),
+                        ButtonText = "OK"
+                    };
+                    await dialog.ShowAsync();
+                }
+                catch
+                {
+                    SingleActionDialog dialog = new()
+                    {
+                        Message = "Download failed. That can happen if you don't have an internet connection or this app is outdated.",
+                        ButtonText = "OK"
+                    };
+                    await dialog.ShowAsync();
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine(ex);
-
                 SingleActionDialog dialog = new()
                 {
-                    Message = "Download failed. Is your client outdated?",
+                    Message = "Download cancelled",
                     ButtonText = "OK"
                 };
                 await dialog.ShowAsync();
@@ -196,6 +195,12 @@ namespace YouTube_Downloader
 
         public async Task<IStorageFile?> FilePrompt(FileType type, string filename)
         {
+            //remove invalid characters from filename
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                filename = filename.Replace(c, '_');
+            }
+
             FilePickerSaveOptions options;
 
             if (type == FileType.Video)
