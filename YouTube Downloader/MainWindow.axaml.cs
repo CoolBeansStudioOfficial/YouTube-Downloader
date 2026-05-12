@@ -101,7 +101,6 @@ namespace YouTube_Downloader
                 };
                 await dialog.ShowAsync();
             }
-
         }
 
         public void CheckAudio(object sender, RoutedEventArgs args)
@@ -112,35 +111,50 @@ namespace YouTube_Downloader
 
         public async void DownloadVideo(object sender, RoutedEventArgs args)
         {
-            try
-            {
-                //create different save options if audio only was selected
-                IStorageFile? file;
-                if (AudioCheckbox.IsChecked.Value) file = await FilePrompt(FileType.Audio, video.Title);
-                else file = await FilePrompt(FileType.Video, video.Title);
+            //create different save options if audio only was selected
+            IStorageFile? file;
+            if (AudioCheckbox.IsChecked.Value) file = await FilePrompt(FileType.Audio, video.Title);
+            else file = await FilePrompt(FileType.Video, video.Title);
 
-                //get user chosen resolution and download video
-                if (file is not null)
+            //get user chosen resolution and download video
+            if (file is not null)
+            {
+                IStreamInfo[] streamInfos;
+                if (AudioCheckbox.IsChecked.Value)
                 {
-                    var streamInfos = new IStreamInfo[] { manifest.GetAudioOnlyStreams().GetWithHighestBitrate(), manifest.GetVideoOnlyStreams().ElementAt(QualitySelect.SelectedIndex) };
-                    await youtube.Videos.DownloadAsync(streamInfos, new ConversionRequestBuilder(file.TryGetLocalPath()).Build());
+                    streamInfos = [manifest.GetAudioOnlyStreams().GetWithHighestBitrate()];
                 }
-                else throw new Exception("Download cancelled");
-
-                SingleActionDialog dialog = new()
+                else
                 {
-                    Message = "Successfully downloaded video to " + file.TryGetLocalPath(),
-                    ButtonText = "OK"
-                };
-                await dialog.ShowAsync();
+                    streamInfos = [manifest.GetAudioOnlyStreams().GetWithHighestBitrate(), manifest.GetVideoOnlyStreams().ElementAt(QualitySelect.SelectedIndex)];
+                }
+
+                try
+                {
+                    await youtube.Videos.DownloadAsync(streamInfos, new ConversionRequestBuilder(file.TryGetLocalPath()).Build());
+
+                    SingleActionDialog dialog = new()
+                    {
+                        Message = "Successfully downloaded video to " + file.TryGetLocalPath(),
+                        ButtonText = "OK"
+                    };
+                    await dialog.ShowAsync();
+                }
+                catch
+                {
+                    SingleActionDialog dialog = new()
+                    {
+                        Message = "Download failed. That can happen if you don't have an internet connection or this app is outdated.",
+                        ButtonText = "OK"
+                    };
+                    await dialog.ShowAsync();
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine(ex);
-
                 SingleActionDialog dialog = new()
                 {
-                    Message = "Download failed. That can happen if you don't have an internet connection or this app is outdated.",
+                    Message = "Download cancelled.",
                     ButtonText = "OK"
                 };
                 await dialog.ShowAsync();
@@ -160,7 +174,7 @@ namespace YouTube_Downloader
 
                     SingleActionDialog dialog = new()
                     {
-                        Message = "Successfully downloaded thumbnail to " + file.TryGetLocalPath(),
+                        Message = $"Successfully downloaded thumbnail to {file.TryGetLocalPath()}.",
                         ButtonText = "OK"
                     };
                     await dialog.ShowAsync();
@@ -179,7 +193,7 @@ namespace YouTube_Downloader
             {
                 SingleActionDialog dialog = new()
                 {
-                    Message = "Download cancelled",
+                    Message = "Download cancelled.",
                     ButtonText = "OK"
                 };
                 await dialog.ShowAsync();
@@ -230,7 +244,7 @@ namespace YouTube_Downloader
                 {
                     Title = "Choose where to save the download",
                     SuggestedFileName = filename,
-                    DefaultExtension = ".jpg",
+                    DefaultExtension = "jpg",
                     ShowOverwritePrompt = true
                 };
             }
